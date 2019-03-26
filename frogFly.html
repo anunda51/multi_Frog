@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>template for simple games</title>
+    <script type="text/javascript" src="simpleGame.js"></script>
+    <script type="text/javascript" src="frogLib.js"></script>
+    <script type="text/javascript">
+        var scene;
+        var frog; //อ๊บๆไง จะใครละ
+        var flies; //แมลงวัน
+        var leaves;
+        var ribbitMP3, ribbitOGG;
+        var hits;
+        var numflies = 5; //แมลงวันกี่ตัว
+
+        function init() {
+            hits = 0;
+            scene = new Scene();
+            leaves = new Sprite(scene, "leaves.png", 640, 480);
+            leaves.setSpeed(0);
+            setupFlies();
+            frog = new Frog();
+
+            ribbitMP3 = new Sound("ribbit.mp3");
+            ribbitOGG = new Sound("ribbit.ogg")
+
+            scene.start();
+        } // end init
+
+        function update() {
+            scene.clear();
+
+            //handle events here
+            frog.moveKey();
+            
+            //update all the sprites
+            leaves.update();
+            for (var i = 0; i < numflies; i++) {
+                flies[i].wriggle();
+                checkCollision(i);
+                flies[i].update();
+            }
+            frog.update();
+        }
+
+        //ตรวจสอบการชนกันของวัตถุ
+        function checkCollision(flynum) {
+            if (frog.collidesWith(flies[flynum])) {
+                ribbitMP3.play();
+                ribbitOGG.play();
+                flies[flynum].reset();
+                updateScore();
+            }
+        }
+
+        // สร้างแมลงหลายตัว
+        function setupFlies() {
+            flies = new Array(numflies);
+            for (var i = 0; i < numflies; i++) {
+                flies[i] = new Fly();
+            }
+        }
+
+        function updateScore(){
+            hits++;
+            var showScore = document.getElementById("scoreBoard")
+            showScore.innerHTML = "Hits : " + hits;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="scoreBoard" style="font-size:50px">Hits : 0</div>
+</body>
+
+</html>

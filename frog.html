@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>template for simple games</title>
+    <script type="text/javascript" src="simpleGame.js"></script>
+    <script type="text/javascript">
+        var scene;
+        var frog;
+        var leaves;
+        var topSpeed = 0;
+
+        function Frog() {
+            tFrog = new Sprite(scene, "frog.png", 50, 50);
+            tFrog.setSpeed(0);
+            tFrog.setAngle(0);
+            tFrog.moveKey = function () {
+                if (keysDown[K_LEFT]) {
+                    tFrog.changeAngleBy(-5);
+                }
+
+                if (keysDown[K_RIGHT]) {
+                    tFrog.changeAngleBy(5);
+                }
+
+                if (keysDown[K_UP]) {
+                    topSpeed++;
+                    console.log(topSpeed);
+                    //กำหนดความเร็วสูงสุด
+                    if (topSpeed > 5) {
+                        tFrog.changeSpeedBy(0);
+                        topSpeed = 5;
+                    } else {
+                        tFrog.changeSpeedBy(1);
+                    }
+                }
+                //ถอยหลัง
+                if (keysDown[K_DOWN]) {
+                    topSpeed--;
+                    console.log(topSpeed);
+                    //กำหนดความเร็วสูงสุด
+                    if (topSpeed <= -5) {
+                        tFrog.changeSpeedBy(0);
+                        topSpeed = -5;
+                    } else {
+                        tFrog.changeSpeedBy(-1);
+                    }
+                }
+                //เบรค โดยการชะลอ
+                if (keysDown[K_SPACE]) {
+                    if (topSpeed > 0) {
+                        topSpeed--;
+                        console.log(topSpeed);
+                        tFrog.changeSpeedBy(-1);
+                        if (topSpeed == 0) {
+                            tFrog.setSpeed(0);
+                            topSpeed = 0;
+                        }
+                    }
+                    if (topSpeed < 0) {
+                        topSpeed++;
+                        console.log(topSpeed);
+                        tFrog.changeSpeedBy(1);
+                        if (topSpeed == 0) {
+                            tFrog.setSpeed(0);
+                            topSpeed = 0;
+                        }
+                    }
+                }
+            }
+            return tFrog;
+        }
+
+        function init() {
+            scene = new Scene();
+            leaves = new Sprite(scene, "leaves.png", 640, 480);
+            leaves.setSpeed(0);
+            frog = new Frog();
+            scene.start();
+        } // end init
+
+        function update() {
+            scene.clear();
+            frog.moveKey();
+            //handle events here
+
+            //update all the sprites
+            leaves.update();
+            frog.update();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+
+</body>
+
+</html>
